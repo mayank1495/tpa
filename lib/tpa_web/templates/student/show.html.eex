@@ -1,0 +1,33 @@
+<h2>Show Student</h2>
+
+<ul>
+
+  <li>
+    <strong>First name:</strong>
+    <%= @student.first_name %>
+  </li>
+
+  <li>
+    <strong>Last name:</strong>
+    <%= @student.last_name %>
+  </li>
+
+  <li>
+    <strong>Cgpa:</strong>
+    <%= @student.cgpa %>
+  </li>
+
+  <li>
+    <strong>Address:</strong>
+    <%= @student.address %>
+  </li>
+
+  <li>
+    <strong>Dept:</strong>
+    <%= @student.dept %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: student_path(@conn, :edit, @student) %></span>
+<span><%= link "Back", to: student_path(@conn, :index) %></span>

@@ -17,10 +17,14 @@ defmodule TpaWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    # resources("/students", StudentController)
+
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", TpaWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", TpaWeb do
+    pipe_through :api
+    pipe_through :browser
+    resources("/students", StudentController)
+  end
 end

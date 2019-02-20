@@ -1,0 +1,34 @@
+<h2>Listing Students</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>First name</th>
+      <th>Last name</th>
+      <th>Cgpa</th>
+      <th>Address</th>
+      <th>Dept</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for student <- @students do %>
+    <tr>
+      <td><%= student.first_name %></td>
+      <td><%= student.last_name %></td>
+      <td><%= student.cgpa %></td>
+      <td><%= student.address %></td>
+      <td><%= student.dept %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: student_path(@conn, :show, student), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: student_path(@conn, :edit, student), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: student_path(@conn, :delete, student), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Student", to: student_path(@conn, :new) %></span>
