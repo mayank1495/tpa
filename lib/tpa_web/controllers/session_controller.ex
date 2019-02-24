@@ -1,0 +1,30 @@
+defmodule TpaWeb.SessionController do
+  use TpaWeb, :controller
+
+  alias Tpa.Accounts
+
+  def new(conn, _) do
+    render(conn, "new.html")
+  end
+
+  def create(conn, %{"student" => %{"email" => email, "password" => password}}) do
+    case Accounts.authenticate_by_email_password(email, password) do
+      {:ok, student} ->
+        conn
+        |> put_flash(:info, "Welcome back!")
+        |> put_session(:student_id, student.id)
+        |> configure_session(renew: true)
+        |> redirect(to: "/")
+      {:error, :unauthorized} ->
+        conn
+        |> put_flash(:error, "Bad email/password combination")
+        |> redirect(to: session_path(conn, :new))
+    end
+  end
+
+  def delete(conn, _) do
+    conn
+    |> configure_session(drop: true)
+    |> redirect(to: "/")
+  end
+end

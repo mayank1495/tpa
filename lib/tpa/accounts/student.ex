@@ -1,7 +1,7 @@
 defmodule Tpa.Accounts.Student do
   use Ecto.Schema
   import Ecto.Changeset
-
+  alias Tpa.Accounts.Credential
 
   schema "students" do
     field :address, :string
@@ -9,7 +9,7 @@ defmodule Tpa.Accounts.Student do
     field :dept, :string
     field :first_name, :string
     field :last_name, :string
-
+    has_one :credential, Credential
     timestamps()
   end
 

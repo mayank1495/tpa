@@ -27,6 +27,11 @@
     <%= @student.dept %>
   </li>
 
+   <li>
+   <strong>Email:</strong>
+   <%= @student.credential.email %>
+ </li>
+
 </ul>
 
 <span><%= link "Edit", to: student_path(@conn, :edit, @student) %></span>
