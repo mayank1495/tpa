@@ -1,0 +1,22 @@
+
+
+<%= form_for @conn, @action, fn f -> %>
+  <h2> Login </h2>
+  
+  <div class="form-group">
+    <%= label f, :email, class: "control-label" %>
+    <%= email_input f, :email, class: "form-control", required: "required"  %>
+    <%= error_tag f, :email %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :password, class: "control-label" %>
+    <%= password_input f, :password, class: "form-control", required: "required"  %>
+    <%= error_tag f, :password %>
+  </div>
+
+   <div class="form-group">
+    <%= submit "Login", class: "btn btn-primary" %>
+  </div>
+</div>
+<% end %>
