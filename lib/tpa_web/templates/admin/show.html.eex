@@ -1,0 +1,13 @@
+<h2>Show Admin</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @admin.name %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: admin_path(@conn, :edit, @admin) %></span>
+<span><%= link "Back", to: admin_path(@conn, :index) %></span>
