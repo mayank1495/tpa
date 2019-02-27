@@ -6,7 +6,7 @@ defmodule Tpa.Accounts do
   import Ecto.Query, warn: false
   alias Tpa.Repo
 
-  alias Tpa.Accounts.User
+  alias Tpa.Accounts.{User, Admin}
 
   @doc """
   Returns the list of users.
@@ -102,7 +102,7 @@ defmodule Tpa.Accounts do
     User.changeset(user, %{})
   end
 
-  alias Tpa.Accounts.Admin
+#   alias Tpa.Accounts.Admin
 
   @doc """
   Returns the list of admins.
@@ -114,7 +114,9 @@ defmodule Tpa.Accounts do
 
   """
   def list_admins do
-    Repo.all(Admin)
+    Admin
+    |> Repo.all()
+    |> Repo.preload(:user)
   end
 
   @doc """
@@ -131,7 +133,11 @@ defmodule Tpa.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_admin!(id), do: Repo.get!(Admin, id)
+  def get_admin!(id) do
+    Admin
+    |> Repo.get!(id)
+    |> Repo.preload(:user)
+  end
 
   @doc """
   Creates a admin.
@@ -148,6 +154,7 @@ defmodule Tpa.Accounts do
   def create_admin(attrs \\ %{}) do
     %Admin{}
     |> Admin.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:user, with: &User.changeset/2)
     |> Repo.insert()
   end
 
@@ -166,6 +173,7 @@ defmodule Tpa.Accounts do
   def update_admin(%Admin{} = admin, attrs) do
     admin
     |> Admin.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:user, with: &User.changeset/2)
     |> Repo.update()
   end
 
