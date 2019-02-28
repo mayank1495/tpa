@@ -1,7 +1,7 @@
 
 
-<%= form_for @conn, @action, fn f -> %>
-  <h2> Login </h2>
+<%= form_for @conn, auth_path(@conn, :submit_login ), fn f -> %>
+  <h1> Login </h1>
   
   <div class="form-group">
     <%= label f, :email, class: "control-label" %>

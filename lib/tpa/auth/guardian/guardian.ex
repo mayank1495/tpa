@@ -5,6 +5,9 @@ defmodule Tpa.Auth.Guardian do
     # TODO: return {:ok, resource}.Put email as resource.
     # {:ok, user.email}
     sub = to_string(user.id)
+    # IO.puts "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
+    # IO.inspect sub
+    # IO.puts "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
     {:ok, sub}
   end
 
@@ -17,8 +20,15 @@ defmodule Tpa.Auth.Guardian do
     # Decide on porper "sub" first
     # user = %{email: claims["email"], password: claims["password"]}
     # {:ok, user}
+    IO.puts "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+    IO.inspect claims
+    IO.puts "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+
     id = claims["sub"]
     resource = Tpa.Accounts.get_user!(id)
+    # IO.puts "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+    # IO.inspect resource
+    # IO.puts "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
     {:ok,  resource}
   end
 

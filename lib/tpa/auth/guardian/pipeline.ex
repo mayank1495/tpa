@@ -11,5 +11,6 @@ defmodule Tpa.Auth.Guardian.Pipeline do
   # Load the user if either of the verifications worked
   # By default, the LoadResource plug will return an error if no resource can be found.
   # We can override this behaviour using the allow_blank: true option. ??
+  plug Guardian.Plug.EnsureAuthenticated
   plug(Guardian.Plug.LoadResource, allow_blank: true)
 end

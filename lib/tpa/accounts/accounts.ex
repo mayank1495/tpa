@@ -6,8 +6,50 @@ defmodule Tpa.Accounts do
   import Ecto.Query, warn: false
   alias Tpa.Repo
 
-  alias Tpa.Accounts.{User, Admin}
+  alias Tpa.Accounts.{User, Admin, Student}
 
+  alias MyApi.Guardian
+
+
+  import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
+
+
+  def authenticate_user(email,password) do
+    case email_password_auth(email,password) do
+        {:ok,user} -> {:ok,user}
+        _ -> {:error, :unauthorized}
+    end
+  end
+
+  defp email_password_auth(email, password) when is_binary(email) and is_binary(password) do
+    with {:ok, user} <- get_by_email(email),
+    do: verify_password(password, user)
+  end
+
+  defp get_by_email(email) when is_binary(email) do
+    case Repo.get_by(User, email: email) do
+      nil ->
+        dummy_checkpw()
+        {:error, "Login error."}
+      user ->
+        {:ok, user}
+    end
+  end
+
+  defp verify_password(password, %User{} = user) when is_binary(password) do
+    if checkpw(password, user.password_hash) do
+      IO.inspect user
+      {:ok, user}
+    else
+      {:error, :invalid_password}
+    end
+  end
+
+#   def get_by(email) do
+#     User
+#     |> Repo.get_by(email: email)
+#     |> Repo.preload([:student, :admin])
+#   end
   @doc """
   Returns the list of users.
 
@@ -18,7 +60,9 @@ defmodule Tpa.Accounts do
 
   """
   def list_users do
-    Repo.all(User)
+    User
+    |> Repo.all()
+    |> Repo.preload([:student,:admin])
   end
 
   @doc """
@@ -35,7 +79,11 @@ defmodule Tpa.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    User
+    |> Repo.get!( id)
+    |> Repo.preload([:student,:admin])
+  end
 
   @doc """
   Creates a user.
@@ -206,7 +254,7 @@ defmodule Tpa.Accounts do
     Admin.changeset(admin, %{})
   end
 
-  alias Tpa.Accounts.Student
+#   alias Tpa.Accounts.Student
 
   @doc """
   Returns the list of students.
