@@ -16,10 +16,9 @@
       <header class="header">
         <nav role="navigation">
           <ul class="nav nav-pills pull-right">
-            <li><a href="#">Get Started</a></li>
-              
                   <%= if Guardian.Plug.current_claims(@conn) do %>
                    <li><a href="/logout" class="btn btn-line">Logout</a></li>
+                
                   <% end %>
           </ul>
           

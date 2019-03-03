@@ -38,7 +38,7 @@ defmodule Tpa.Accounts do
 
   defp verify_password(password, %User{} = user) when is_binary(password) do
     if checkpw(password, user.password_hash) do
-      IO.inspect user
+      # IO.inspect user
       {:ok, user}
     else
       {:error, :invalid_password}
@@ -266,7 +266,9 @@ defmodule Tpa.Accounts do
 
   """
   def list_students do
-    Repo.all(Student)
+    Student
+    |> Repo.all()
+    |> Repo.preload(:user)
   end
 
   @doc """
@@ -283,7 +285,11 @@ defmodule Tpa.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_student!(id), do: Repo.get!(Student, id)
+  def get_student!(id) do
+    Student
+    |> Repo.get!(id)
+    |> Repo.preload(:user)
+  end
 
   @doc """
   Creates a student.
@@ -300,6 +306,7 @@ defmodule Tpa.Accounts do
   def create_student(attrs \\ %{}) do
     %Student{}
     |> Student.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:user, with: &User.changeset/2)
     |> Repo.insert()
   end
 
@@ -318,6 +325,7 @@ defmodule Tpa.Accounts do
   def update_student(%Student{} = student, attrs) do
     student
     |> Student.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:user, with: &User.changeset/2)
     |> Repo.update()
   end
 

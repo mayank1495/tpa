@@ -3,6 +3,7 @@ defmodule TpaWeb.StudentController do
 
   alias Tpa.Accounts
   alias Tpa.Accounts.Student
+  alias Tpa.Auth.Guardian
 
   def index(conn, _params) do
     students = Accounts.list_students()
@@ -10,15 +11,27 @@ defmodule TpaWeb.StudentController do
   end
 
   def new(conn, _params) do
+    maybe_user = Guardian.Plug.current_resource(conn)
+
+    if maybe_user do
+      redirect(conn, to: "/")
+  else
     changeset = Accounts.change_student(%Student{})
     render(conn, "new.html", changeset: changeset)
   end
+  end
 
   def create(conn, %{"student" => student_params}) do
+    maybe_user = Guardian.Plug.current_resource(conn)
+
     case Accounts.create_student(student_params) do
       {:ok, student} ->
+        claims = %{
+          "role" => "student"
+        }
         conn
         |> put_flash(:info, "Student created successfully.")
+        |> Guardian.Plug.sign_in(student.user, claims)
         |> redirect(to: student_path(conn, :show, student))
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)

@@ -20,9 +20,7 @@ defmodule Tpa.Auth.Guardian do
     # Decide on porper "sub" first
     # user = %{email: claims["email"], password: claims["password"]}
     # {:ok, user}
-    IO.puts "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
-    IO.inspect claims
-    IO.puts "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+
 
     id = claims["sub"]
     resource = Tpa.Accounts.get_user!(id)

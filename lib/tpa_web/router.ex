@@ -14,6 +14,10 @@ defmodule TpaWeb.Router do
   end
 
   pipeline :auth do
+    plug(Tpa.Auth.Guardian.BasePipeline)
+  end
+
+  pipeline :ensure_auth do
     plug(Tpa.Auth.Guardian.Pipeline)
   end
 
@@ -26,20 +30,22 @@ defmodule TpaWeb.Router do
   end
 
   scope "/", TpaWeb do
-    pipe_through :browser # Use the default browser stack
+    pipe_through ([:browser, :auth]) # Use the default browser stack
 
     get("/login", AuthController, :login)
     post("/login", AuthController, :submit_login)
     get("/logout", AuthController, :logout)
+    get("/register", StudentController, :new)
+    post("/register", StudentController, :create)
   end
 
   scope "/", TpaWeb do
-    pipe_through ([:browser, :auth])
+    pipe_through ([:browser, :ensure_auth])
 
     get "/", PageController, :index
     resources "/users", UserController
     # resources "/admins", AdminController
-    resources "/students", StudentController
+    resources "/students", StudentController, except: [:new, :create]
   end
 
   scope "/", TpaWeb do
