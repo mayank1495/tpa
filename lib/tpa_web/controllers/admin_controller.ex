@@ -5,8 +5,9 @@ defmodule TpaWeb.AdminController do
   alias Tpa.Accounts.Admin
 
   def index(conn, _params) do
-    admins = Accounts.list_admins()
-    render(conn, "index.html", admins: admins)
+    redirect(conn, to: company_path(conn, :index))
+    # admins = Accounts.list_admins()
+    # render(conn, "index.html", admins: admins)
   end
 
   def new(conn, _params) do

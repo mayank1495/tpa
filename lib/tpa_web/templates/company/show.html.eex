@@ -1,0 +1,28 @@
+<h2>Show Company</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @company.name %>
+  </li>
+
+  <li>
+    <strong>Package:</strong>
+    <%= @company.package %>
+  </li>
+
+  <li>
+    <strong>Location:</strong>
+    <%= @company.location %>
+  </li>
+
+  <li>
+    <strong>Job profile:</strong>
+    <%= @company.job_profile %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: company_path(@conn, :edit, @company) %></span>
+<span><%= link "Back", to: company_path(@conn, :index) %></span>

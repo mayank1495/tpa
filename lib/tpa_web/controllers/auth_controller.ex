@@ -36,7 +36,8 @@ defmodule TpaWeb.AuthController do
         |> put_flash(:info, "Login Successful")
         # arg1: resource, arg2: claims, arg3: validity # Claims ?
         |> Guardian.Plug.sign_in(user, claims)
-        |> redirect(to: path)
+        |> put_session(:current_user, user.id)
+        |> redirect(to: "/")
       {:error, resp} ->
         Tpa.Auth.Guardian.ErrorHandler.auth_error(conn, {:error, resp}, [])
     end

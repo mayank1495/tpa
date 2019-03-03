@@ -8,7 +8,7 @@ defmodule Tpa.Accounts do
 
   alias Tpa.Accounts.{User, Admin, Student}
 
-  alias MyApi.Guardian
+  alias Tpa.Auth.Guardian
 
 
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]

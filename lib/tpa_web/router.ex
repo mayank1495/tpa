@@ -52,6 +52,9 @@ defmodule TpaWeb.Router do
     pipe_through ([:browser, :admin_auth])
 
     resources "/admins", AdminController
+    # scope "/admins", TpaWeb do
+    resources "/companies", CompanyController
+    # end
   end
 
   # Other scopes may use custom stacks.

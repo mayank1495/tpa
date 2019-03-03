@@ -25,11 +25,12 @@
     <%= error_tag cf, :password %>
   </div>
 
-  <div class="form-group">
+    <div class="form-group hidden">
     <%= label cf, :role, class: "control-label" %>
-    <%= text_input cf, :role, class: "form-control" %>
+    <%= text_input cf, :role, class: "form-control" , value: "admin" %>
     <%= error_tag cf, :role %>
   </div>
+
 
    <% end %>
  </div>
