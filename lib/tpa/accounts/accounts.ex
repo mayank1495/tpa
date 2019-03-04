@@ -364,9 +364,15 @@ defmodule Tpa.Accounts do
 
   def get_applied_company_ids(id) do
     get_ids = from(s in "student_company", where: s.student_id == ^id, select: s.company_id) |> Tpa.Repo.all()
+    get_ids
     # IO.puts "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ"
     # IO.inspect get_ids
     # IO.puts "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ"
-
 end
+
+  def delete_student_company_entry(std_id,cm_id) do
+    q_rem_id =
+      from(s in "student_company", where: s.company_id == ^cm_id and s.student_id == ^std_id)
+      |> Tpa.Repo.delete_all()
+  end
 end

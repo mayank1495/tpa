@@ -16,9 +16,12 @@
       <header class="header">
         <nav role="navigation">
           <ul class="nav nav-pills pull-right">
-                  <%= if Guardian.Plug.current_claims(@conn) do %>
-                   <li><a href="/logout" class="btn btn-line">Logout</a></li>
-                
+              <% claims = Guardian.Plug.current_claims(@conn) %>
+              <%= if claims["role"] == "student" do %>
+                  <%= link "Profile", to: student_path(@conn,:show_profile), class: "btn btn-line btn-primary"%>
+              <% end %>
+                  <%= if claims do %>
+                   <%= link "Logout", to: auth_path(@conn, :logout), class: "btn btn-line btn-primary" %>                
                   <% end %>
           </ul>
           

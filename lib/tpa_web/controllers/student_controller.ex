@@ -36,6 +36,7 @@ defmodule TpaWeb.StudentController do
         conn
         |> put_flash(:info, "Student created successfully.")
         |> Guardian.Plug.sign_in(student.user, claims)
+        |> put_session(:current_user, student.id)
         |> redirect(to: student_path(conn, :show, student))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -88,14 +89,30 @@ defmodule TpaWeb.StudentController do
     student = Accounts.get_student!(student_id)
     all_company = student.company ++ [company]
     Accounts.update_student_company_relation(student, all_company)
+
     conn
     |> put_flash(:info, "Successfully Applied")
-    |> redirect( to: company_path(conn, :index))
+    |> redirect(to: company_path(conn, :index))
   end
 
   def show_profile(conn, param) do
     student_id = get_session(conn, :current_user)
     student = Accounts.get_student!(student_id)
     render(conn, "profile.html", student: student)
+  end
+
+  def get_company_ids(conn) do
+    std_id = get_session(conn, :current_user)
+    # ids =
+    Tpa.Accounts.get_applied_company_ids(std_id)
+  end
+
+  def withdraw_company(conn, %{"id" => id}) do
+    std_id = get_session(conn, :current_user)
+    {cm_id , ""} = Integer.parse(id)
+    Accounts.delete_student_company_entry(std_id, cm_id)
+    conn
+    |> put_flash(:danger, "Withdrawn!!!")
+    |> redirect(to: company_path(conn, :index))
   end
 end

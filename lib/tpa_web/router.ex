@@ -49,6 +49,7 @@ defmodule TpaWeb.Router do
     scope "/student" do
       get "/companies", StudentController, :show_company
       get "/companies/:id/apply", StudentController, :apply_for_company
+      get "/companies/:id/withdraw", StudentController, :withdraw_company
       get "/profile", StudentController, :show_profile
     end
 

@@ -9,4 +9,9 @@ defmodule TpaWeb.CompanyView do
       "admin" -> true
     end
   end
+
+  def has_applied_for?(conn, id) do
+    id_list = TpaWeb.StudentController.get_company_ids(conn)
+    Enum.member?(id_list, id)
+  end
 end
