@@ -4,10 +4,13 @@ defmodule TpaWeb.StudentController do
   alias Tpa.Accounts
   alias Tpa.Accounts.Student
   alias Tpa.Auth.Guardian
+  alias Tpa.Placement
+  alias Tpa.Placement.Company
 
   def index(conn, _params) do
-    students = Accounts.list_students()
-    render(conn, "index.html", students: students)
+    redirect(conn, to: student_path(conn, :show_profile))
+    # students = Accounts.list_students()
+    # render(conn, "index.html", students: students)
   end
 
   def new(conn, _params) do
@@ -15,10 +18,10 @@ defmodule TpaWeb.StudentController do
 
     if maybe_user do
       redirect(conn, to: "/")
-  else
-    changeset = Accounts.change_student(%Student{})
-    render(conn, "new.html", changeset: changeset)
-  end
+    else
+      changeset = Accounts.change_student(%Student{})
+      render(conn, "new.html", changeset: changeset)
+    end
   end
 
   def create(conn, %{"student" => student_params}) do
@@ -29,10 +32,12 @@ defmodule TpaWeb.StudentController do
         claims = %{
           "role" => "student"
         }
+
         conn
         |> put_flash(:info, "Student created successfully.")
         |> Guardian.Plug.sign_in(student.user, claims)
         |> redirect(to: student_path(conn, :show, student))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
@@ -57,6 +62,7 @@ defmodule TpaWeb.StudentController do
         conn
         |> put_flash(:info, "Student updated successfully.")
         |> redirect(to: student_path(conn, :show, student))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", student: student, changeset: changeset)
     end
@@ -69,5 +75,27 @@ defmodule TpaWeb.StudentController do
     conn
     |> put_flash(:info, "Student deleted successfully.")
     |> redirect(to: student_path(conn, :index))
+  end
+
+  def show_company(conn, _param) do
+    # companies = Tpa.Placement.list_companies()
+    redirect(conn, to: company_path(conn, :index))
+  end
+
+  def apply_for_company(conn, %{"id" => company_id}) do
+    student_id = get_session(conn, :current_user)
+    company = Placement.get_company!(company_id)
+    student = Accounts.get_student!(student_id)
+    all_company = student.company ++ [company]
+    Accounts.update_student_company_relation(student, all_company)
+    conn
+    |> put_flash(:info, "Successfully Applied")
+    |> redirect( to: company_path(conn, :index))
+  end
+
+  def show_profile(conn, param) do
+    student_id = get_session(conn, :current_user)
+    student = Accounts.get_student!(student_id)
+    render(conn, "profile.html", student: student)
   end
 end

@@ -2,7 +2,7 @@ defmodule Tpa.Accounts.Student do
   use Ecto.Schema
   import Ecto.Changeset
   alias Tpa.Accounts.User
-
+  alias Tpa.Placement.Company
 
   schema "students" do
     field :first_name, :string
@@ -12,6 +12,8 @@ defmodule Tpa.Accounts.Student do
     # field :user_id, :id
 
     belongs_to :user, User
+    many_to_many(:company, Company, join_through: "student_company")
+
     timestamps()
   end
 

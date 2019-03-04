@@ -1,0 +1,24 @@
+<h2>Profile</h2>
+
+<ul>
+
+  <li>
+    <strong>First name:</strong>
+    <%= @student.first_name %>
+  </li>
+
+  <li>
+    <strong>Last name:</strong>
+    <%= @student.last_name %>
+  </li>
+
+  <li>
+    <strong>Reg no:</strong>
+    <%= @student.reg_no %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit Profile", to: student_path(@conn, :edit, @student), class: "btn btn-primary" %></span>
+<span><%= link "Show Companies", to: student_path(@conn, :show_company) , class: "btn btn-primary" %></span>
+

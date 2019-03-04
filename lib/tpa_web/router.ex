@@ -46,14 +46,26 @@ defmodule TpaWeb.Router do
     resources "/users", UserController
     # resources "/admins", AdminController
     resources "/students", StudentController, except: [:new, :create]
+    scope "/student" do
+      get "/companies", StudentController, :show_company
+      get "/companies/:id/apply", StudentController, :apply_for_company
+      get "/profile", StudentController, :show_profile
+    end
+
+    # resources "/companies", CompanyController, only: [:show,:index]
+    resources "/companies", CompanyController #, except: [:show,:index]
+
+
   end
 
   scope "/", TpaWeb do
     pipe_through ([:browser, :admin_auth])
+    # pipe_through ([:browser])
+
 
     resources "/admins", AdminController
     # scope "/admins", TpaWeb do
-    resources "/companies", CompanyController
+    # resources "/companies", CompanyController #, except: [:show,:index]
     # end
   end
 

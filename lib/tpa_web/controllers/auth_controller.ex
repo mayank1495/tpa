@@ -1,21 +1,11 @@
 defmodule TpaWeb.AuthController do
   use TpaWeb, :controller
 
-  # def index(conn, _params) do
-  #   render conn, "index.html"
-  # end
   alias Tpa.Auth.Guardian
+  alias Tpa.Accounts.Student
 
   def login(conn, _) do
     maybe_user = Guardian.Plug.current_resource(conn)
-    # clm = Guardian.Plug.current_claims(conn)
-
-    # IO.puts "+++++++++++++++++"
-    # IO.inspect maybe_user
-    # IO.puts "+++++++++++++++++"
-    # IO.inspect clm
-    # IO.puts "+++++++++++++++++"
-
 
     if maybe_user do
       redirect(conn, to: "/")
@@ -25,23 +15,31 @@ defmodule TpaWeb.AuthController do
   end
 
   def submit_login(conn, %{"email" => email, "password" => password}) do
-
-    case Tpa.Accounts.authenticate_user(email,password) do
+    case Tpa.Accounts.authenticate_user(email, password) do
       {:ok, user} ->
         claims = %{
           "role" => user.role
         }
+
+        [user_role] =
+          case user.role do
+            "admin" -> user.admin
+            "student" -> user.student
+          end
+
+        role_id = user_role.id
         path = after_login_path(conn, user.role)
+
         conn
         |> put_flash(:info, "Login Successful")
         # arg1: resource, arg2: claims, arg3: validity # Claims ?
         |> Guardian.Plug.sign_in(user, claims)
-        |> put_session(:current_user, user.id)
-        |> redirect(to: "/")
+        |> put_session(:current_user, role_id)
+        |> redirect(to: path)
+
       {:error, resp} ->
         Tpa.Auth.Guardian.ErrorHandler.auth_error(conn, {:error, resp}, [])
     end
-    # TODO
   end
 
   def logout(conn, _) do
@@ -51,7 +49,7 @@ defmodule TpaWeb.AuthController do
   end
 
   defp after_login_path(conn, "student") do
-    student_path(conn, :index)
+    student_path(conn, :show_profile)
   end
 
   defp after_login_path(conn, "admin") do

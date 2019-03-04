@@ -3,6 +3,9 @@ defmodule TpaWeb.CompanyController do
 
   alias Tpa.Placement
   alias Tpa.Placement.Company
+  alias Tpa.Auth.Guardian
+
+  plug :authorize_admin when action in [:new, :create, :update, :edit, :delete]
 
   def index(conn, _params) do
     companies = Placement.list_companies()
@@ -56,5 +59,17 @@ defmodule TpaWeb.CompanyController do
     conn
     |> put_flash(:info, "Company deleted successfully.")
     |> redirect(to: company_path(conn, :index))
+  end
+
+  defp authorize_admin(conn, _params) do
+    claims = Guardian.Plug.current_claims(conn)
+    if claims["role"] == "admin" do
+      conn
+    else
+      conn
+      |> put_flash(:error, "Not authorized")
+      |> redirect(to: student_path(conn,:show_profile))
+      |> halt()
+    end
   end
 end

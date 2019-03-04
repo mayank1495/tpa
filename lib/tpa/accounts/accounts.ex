@@ -7,30 +7,29 @@ defmodule Tpa.Accounts do
   alias Tpa.Repo
 
   alias Tpa.Accounts.{User, Admin, Student}
-
+  alias Tpa.Placement.Company
   alias Tpa.Auth.Guardian
-
 
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
-
-  def authenticate_user(email,password) do
-    case email_password_auth(email,password) do
-        {:ok,user} -> {:ok,user}
-        _ -> {:error, :unauthorized}
+  def authenticate_user(email, password) do
+    case email_password_auth(email, password) do
+      {:ok, user} -> {:ok, user}
+      _ -> {:error, :unauthorized}
     end
   end
 
   defp email_password_auth(email, password) when is_binary(email) and is_binary(password) do
     with {:ok, user} <- get_by_email(email),
-    do: verify_password(password, user)
+         do: verify_password(password, user)
   end
 
   defp get_by_email(email) when is_binary(email) do
-    case Repo.get_by(User, email: email) do
+    case Repo.get_by(User, email: email) |> Repo.preload([:student, :admin]) do
       nil ->
         dummy_checkpw()
         {:error, "Login error."}
+
       user ->
         {:ok, user}
     end
@@ -45,11 +44,11 @@ defmodule Tpa.Accounts do
     end
   end
 
-#   def get_by(email) do
-#     User
-#     |> Repo.get_by(email: email)
-#     |> Repo.preload([:student, :admin])
-#   end
+  #   def get_by(email) do
+  #     User
+  #     |> Repo.get_by(email: email)
+  #     |> Repo.preload([:student, :admin])
+  #   end
   @doc """
   Returns the list of users.
 
@@ -62,7 +61,7 @@ defmodule Tpa.Accounts do
   def list_users do
     User
     |> Repo.all()
-    |> Repo.preload([:student,:admin])
+    |> Repo.preload([:student, :admin])
   end
 
   @doc """
@@ -81,8 +80,8 @@ defmodule Tpa.Accounts do
   """
   def get_user!(id) do
     User
-    |> Repo.get!( id)
-    |> Repo.preload([:student,:admin])
+    |> Repo.get!(id)
+    |> Repo.preload([:student, :admin])
   end
 
   @doc """
@@ -150,7 +149,7 @@ defmodule Tpa.Accounts do
     User.changeset(user, %{})
   end
 
-#   alias Tpa.Accounts.Admin
+  #   alias Tpa.Accounts.Admin
 
   @doc """
   Returns the list of admins.
@@ -254,7 +253,7 @@ defmodule Tpa.Accounts do
     Admin.changeset(admin, %{})
   end
 
-#   alias Tpa.Accounts.Student
+  #   alias Tpa.Accounts.Student
 
   @doc """
   Returns the list of students.
@@ -268,7 +267,7 @@ defmodule Tpa.Accounts do
   def list_students do
     Student
     |> Repo.all()
-    |> Repo.preload(:user)
+    |> Repo.preload([:user, :company])
   end
 
   @doc """
@@ -288,7 +287,7 @@ defmodule Tpa.Accounts do
   def get_student!(id) do
     Student
     |> Repo.get!(id)
-    |> Repo.preload(:user)
+    |> Repo.preload([:user, :company])
   end
 
   @doc """
@@ -357,4 +356,17 @@ defmodule Tpa.Accounts do
   def change_student(%Student{} = student) do
     Student.changeset(student, %{})
   end
+
+  def update_student_company_relation(student, all_company) do
+    changset = Ecto.Changeset.change(student) |> Ecto.Changeset.put_assoc(:company, all_company)
+    Tpa.Repo.update!(changset)
+  end
+
+  def get_applied_company_ids(id) do
+    get_ids = from(s in "student_company", where: s.student_id == ^id, select: s.company_id) |> Tpa.Repo.all()
+    # IO.puts "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ"
+    # IO.inspect get_ids
+    # IO.puts "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ"
+
+end
 end

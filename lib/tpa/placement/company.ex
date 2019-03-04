@@ -1,7 +1,7 @@
 defmodule Tpa.Placement.Company do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Tpa.Accounts.Admin
+  alias Tpa.Accounts.{Admin,Student}
 
   schema "companies" do
     field :job_profile, :string
@@ -11,7 +11,7 @@ defmodule Tpa.Placement.Company do
     # field :admin_id, :id
 
     belongs_to :admin, Admin
-
+    many_to_many(:student, Student, join_through: "student_company")
     timestamps()
   end
 
