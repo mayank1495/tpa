@@ -1,4 +1,5 @@
-<h2>Show Company</h2>
+<% students = @company.student %>
+<h2>Company Details</h2>
 
 <ul>
 
@@ -22,9 +23,45 @@
     <%= @company.job_profile %>
   </li>
 
+
+  <li>
+    <strong>Students Applied: </strong>
+    <%= Enum.count(students) %>
+  </li>
+
+
 </ul>
 
-<% if is_admin?(@conn) do %>
-<span><%= link "Edit", to: company_path(@conn, :edit, @company) %></span>
+<%= if is_admin?(@conn) do %>
+<span><%= link "Edit", to: company_path(@conn, :edit, @company), class: "btn btn-primary" %></span>
 <% end %>
-<span><%= link "Back",to: "#", onclick: "history.back()" %></span>
+<br>
+<br>
+<br>
+
+<%= if !Enum.empty?(students) do %>
+  <h4>Students Applied for: </h4>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for student <- students do %>
+          <tr>
+            <td><%= student.first_name %></td>
+            <td><%= student.user.email %></td>
+            <td class="text-right">
+              <span><%= link "Show", to: student_path(@conn, :show, student), class: "btn btn-default btn-xs" %></span>
+            </td>
+  
+          </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

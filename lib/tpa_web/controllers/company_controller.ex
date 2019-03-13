@@ -22,7 +22,7 @@ defmodule TpaWeb.CompanyController do
       {:ok, company} ->
         conn
         |> put_flash(:info, "Company created successfully.")
-        |> redirect(to: company_path(conn, :show, company))
+        |> redirect(to: admin_path(conn, :index))
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end

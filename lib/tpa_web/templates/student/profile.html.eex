@@ -25,8 +25,12 @@
 
 </ul>
 
+<%= if is_student?(@conn) do %>
 <span><%= link "Edit Profile", to: student_path(@conn, :edit, @student), class: "btn btn-primary" %></span>
 <span><%= link "Show All Companies", to: student_path(@conn, :show_company) , class: "btn btn-primary" %></span>
+<% else %>
+<span><%= link "Back",to: "#", onclick: "history.back()", class: "btn btn-primary" %></span>
+<% end %>
 <br>
 <br>
 <br>

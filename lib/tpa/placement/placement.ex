@@ -41,7 +41,7 @@ defmodule Tpa.Placement do
   def get_company!(id) do
     Company
     |> Repo.get!(id)
-    |> Repo.preload([:admin,:student])
+    |> Repo.preload([:admin,[student: :user]])
   end
 
   @doc """

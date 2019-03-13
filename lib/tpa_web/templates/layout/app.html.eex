@@ -20,6 +20,9 @@
               <%= if claims["role"] == "student" do %>
                   <%= link "Profile", to: student_path(@conn,:show_profile), class: "btn btn-line btn-primary"%>
               <% end %>
+              <%= if claims["role"] == "admin" do %>
+                  <%= link "Home", to: admin_path(@conn,:index), class: "btn btn-line btn-primary"%>
+              <% end %>
                   <%= if claims do %>
                    <%= link "Logout", to: auth_path(@conn, :logout), class: "btn btn-line btn-primary" %>                
                   <% end %>
