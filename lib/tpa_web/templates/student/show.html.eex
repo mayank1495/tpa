@@ -1,0 +1,57 @@
+<% companies = @student.company %>
+<h2>Student Details</h2>
+
+<ul>
+
+  <li>
+    <strong>First name:</strong>
+    <%= @student.first_name %>
+  </li>
+
+  <li>
+    <strong>Last name:</strong>
+    <%= @student.last_name %>
+  </li>
+
+  <li>
+    <strong>Reg no:</strong>
+    <%= @student.reg_no %>
+  </li>
+
+  <li>
+    <strong>Companies applied for: </strong>
+    <%= Enum.count(companies) %>
+  </li>
+
+</ul>
+
+
+<span><%= link "Back",to: "#", onclick: "history.back()", class: "btn btn-primary" %></span>
+<br>
+<br>
+<br>
+
+<%= if !Enum.empty?(companies) do %>
+  <h4>Companies Applied for: </h4>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Package</th>
+        <th>Job profile</th>
+
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for company <- companies do %>
+          <tr>
+            <td><%= company.name %></td>
+            <td><%= company.package %></td>
+            <td><%= company.job_profile %></td>
+          </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
