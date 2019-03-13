@@ -98,7 +98,8 @@ defmodule TpaWeb.StudentController do
   def show_profile(conn, param) do
     student_id = get_session(conn, :current_user)
     student = Accounts.get_student!(student_id)
-    render(conn, "profile.html", student: student)
+    company_ids = get_company_ids(conn)
+    render(conn, "profile.html", student: student, company_ids: company_ids)
   end
 
   def get_company_ids(conn) do

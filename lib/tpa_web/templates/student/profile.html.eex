@@ -1,3 +1,4 @@
+<% companies = @student.company %>
 <h2>Profile</h2>
 
 <ul>
@@ -17,8 +18,44 @@
     <%= @student.reg_no %>
   </li>
 
+  <li>
+    <strong>Companies applied for: </strong>
+    <%= Enum.count(companies) %>
+  </li>
+
 </ul>
 
 <span><%= link "Edit Profile", to: student_path(@conn, :edit, @student), class: "btn btn-primary" %></span>
-<span><%= link "Show Companies", to: student_path(@conn, :show_company) , class: "btn btn-primary" %></span>
+<span><%= link "Show All Companies", to: student_path(@conn, :show_company) , class: "btn btn-primary" %></span>
+<br>
+<br>
+<br>
 
+<%= if !Enum.empty?(companies) do %>
+  <h4>Companies Applied for: </h4>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Package</th>
+        <th>Job profile</th>
+
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for company <- companies do %>
+          <tr>
+            <td><%= company.name %></td>
+            <td><%= company.package %></td>
+            <td><%= company.job_profile %></td>
+            <td class="text-right">
+            
+            <span><%= link "Show", to: company_path(@conn, :show, company), class: "btn btn-default btn-xs" %></span>
+            </td>
+          </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

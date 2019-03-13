@@ -8,7 +8,7 @@ defmodule Tpa.Repo.Migrations.CreateCompanies do
       add :package, :integer
       add :location, :string
       add :job_profile, :string
-      add :admin_id, references(:admins, on_delete: :nothing)
+      add :admin_id, references(:admins, on_delete: :delete_all)
 
       timestamps()
     end

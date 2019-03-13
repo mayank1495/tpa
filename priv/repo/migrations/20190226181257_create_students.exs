@@ -6,7 +6,7 @@ defmodule Tpa.Repo.Migrations.CreateStudents do
       add :first_name, :string
       add :last_name, :string
       add :reg_no, :integer
-      add :user_id, references(:users, on_delete: :nothing)
+      add :user_id, references(:users, on_delete: :delete_all)
 
       timestamps()
     end
